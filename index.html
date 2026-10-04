@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SophistOccasions | Luxury Wedding & Event Planning - Lubbock, TX</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FDFBF7',
+                        champagne: {
+                            50: '#FAF6F0',
+                            100: '#F5ECE0',
+                            200: '#EBD8C1',
+                            300: '#E0C3A1',
+                            400: '#D5AE81',
+                            500: '#C5A059', // Primary Champagne Gold
+                            600: '#B08A46',
+                            700: '#8A6A31',
+                        },
+                        blush: {
+                            50: '#FDFBFB',
+                            100: '#F8ECEE', // Soft Blush
+                            200: '#F5D3CC',
+                            300: '#E8B3A8',
+                        },
+                        charcoal: '#2C2C2C'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        garamond: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Great Vibes"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & FontAwesome CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #FDFBF7;
+            color: #2C2C2C;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDFBF7; }
+        ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 4px; }
+
+        /* Glassmorphism Styles */
+        .glass-nav {
+            background: rgba(253, 251, 247, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .shadow-soft-gold { box-shadow: 0 15px 35px -10px rgba(197, 160, 89, 0.18); }
+        
+        .page-section { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+        .page-section.hidden { display: none; opacity: 0; transform: translateY(12px); }
+        .page-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* Slow Motion Image Carousel Transitions */
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 2.5s cubic-bezier(0.4, 0, 0.2, 1), transform 8s linear;
+            transform: scale(1.0);
+        }
+        
+        .carousel-slide.active-slide {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        .zoom-img-container { overflow: hidden; }
+        .zoom-img-container img { transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .zoom-img-container:hover img { transform: scale(1.06); }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen justify-between">
+
+    <!-- Toast Notification Overlay -->
+    <div id="toastContainer" class="fixed top-24 right-5 z-50 space-y-3 pointer-events-none"></div>
+
+    <!-- 1. HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav border-b border-champagne-200/60 transition-all duration-300" id="mainHeader">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <button onclick="navigateTo('home')" class="flex items-center space-x-3 group focus:outline-none text-left">
+                    <div class="w-10 h-10 rounded-full border border-champagne-500/40 flex items-center justify-center bg-blush-100 group-hover:border-champagne-500 transition-colors">
+                        <span class="font-script text-2xl text-champagne-600 font-bold">S</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif text-2xl font-semibold tracking-wider text-charcoal group-hover:text-champagne-600 transition-colors">
+                            Sophist<span class="font-script text-3xl font-normal text-champagne-500">Occasions</span>
+                        </span>
+                        <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-700 -mt-1 font-semibold">
+                            Lubbock • West Texas
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-8 text-xs font-medium uppercase tracking-widest text-charcoal">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">Home</button>
+                    <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">About Jana & Nancy</button>
+                    <button onclick="navigateTo('services')" id="nav-services" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">Services</button>
+                    <button onclick="navigateTo('gallery')" id="nav-gallery" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">Portfolio</button>
+                    <button onclick="navigateTo('testimonials')" id="nav-testimonials" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">Reviews</button>
+                    <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-1 hover:text-champagne-600 transition-colors relative">Contact</button>
+                </nav>
+
+                <!-- Desktop Action Button -->
+                <div class="hidden lg:flex items-center space-x-5">
+                    <a href="tel:8067811778" class="text-xs font-semibold text-charcoal flex items-center space-x-2 hover:text-champagne-600 transition-colors">
+                        <i class="fa-solid fa-phone text-champagne-500 text-xs"></i>
+                        <span>806-781-1778</span>
+                    </a>
+                    <button onclick="navigateTo('contact')" class="px-5 py-2.5 bg-champagne-500 hover:bg-champagne-600 text-white rounded-full text-xs font-semibold tracking-wider uppercase transition-all shadow-soft-gold">
+                        Book Consultation
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Hamburger -->
+                <button id="mobileMenuBtn" onclick="toggleMobileDrawer()" class="lg:hidden text-charcoal p-2 focus:outline-none" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileDrawer" class="hidden lg:hidden bg-cream border-b border-champagne-200 px-6 pt-4 pb-6 space-y-4">
+            <button onclick="navigateTo('home'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">Home</button>
+            <button onclick="navigateTo('about'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">About Jana & Nancy</button>
+            <button onclick="navigateTo('services'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">Services</button>
+            <button onclick="navigateTo('gallery'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">Portfolio</button>
+            <button onclick="navigateTo('testimonials'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">Reviews</button>
+            <button onclick="navigateTo('contact'); toggleMobileDrawer();" class="block w-full text-left text-xs font-medium uppercase tracking-widest text-charcoal hover:text-champagne-600 py-1">Contact</button>
+            <div class="pt-2 border-t border-champagne-200 flex flex-col space-y-3">
+                <a href="tel:8067811778" class="text-xs font-semibold text-charcoal flex items-center space-x-2">
+                    <i class="fa-solid fa-phone text-champagne-500"></i>
+                    <span>806-781-1778</span>
+                </a>
+                <button onclick="navigateTo('contact'); toggleMobileDrawer();" class="w-full text-center px-5 py-2.5 bg-champagne-500 text-white rounded-full text-xs font-semibold uppercase tracking-wider">
+                    Book Consultation
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow pt-20">
+
+        <!-- ================= PAGE 1: HOME PAGE ================= -->
+        <section id="page-home" class="page-section active">
+            
+            <!-- 2. HERO BANNER -->
+            <div class="relative py-24 md:py-32 bg-cream overflow-hidden border-b border-champagne-100">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000" alt="West Texas Wedding" class="w-full h-full object-cover object-center filter brightness-[0.88]">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cream/95 via-cream/80 to-transparent"></div>
+                </div>
+
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-2xl space-y-6">
+                        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/90 border border-champagne-300 text-champagne-700 shadow-sm">
+                            <i class="fa-solid fa-gem text-xs text-champagne-500"></i>
+                            <span class="text-xs font-semibold tracking-wider uppercase">Lubbock's Premier Event Planners</span>
+                        </div>
+
+                        <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold text-charcoal leading-tight">
+                            Unforgettable, <br>
+                            <span class="font-script text-5xl sm:text-6xl md:text-7xl text-champagne-600">Stress-Free & Elegant</span> <br>
+                            West Texas Weddings.
+                        </h1>
+
+                        <p class="text-sm sm:text-base text-charcoal/80 leading-relaxed font-normal">
+                            Led by Jana Gardner & Nancy Leal, SophistOccasions brings over 13 years of passion and dual-coordinator execution to couples across Lubbock and West Texas.
+                        </p>
+
+                        <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                            <button onclick="navigateTo('contact')" class="px-8 py-4 bg-champagne-500 hover:bg-champagne-600 text-white rounded-full text-xs font-semibold uppercase tracking-widest transition-all shadow-soft-gold text-center">
+                                Book Free Consultation
+                            </button>
+                            <button onclick="navigateTo('services')" class="px-8 py-4 bg-white hover:bg-champagne-50 text-charcoal border border-champagne-300 rounded-full text-xs font-semibold uppercase tracking-widest transition-all text-center">
+                                Explore Packages
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. SLOW MOTION GALLERY SHOWCASE WITH LOVELY ROMANTIC NOTE -->
+            <div class="py-20 md:py-28 bg-white relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                        
+                        <!-- Left Side: Light Lovely Romantic Note -->
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="inline-flex items-center space-x-2 text-champagne-600">
+                                <i class="fa-solid fa-heart text-xs"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest">A Note To Our Couples</span>
+                            </div>
+
+                            <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-charcoal leading-snug">
+                                Every Love Story Deserves a <span class="font-script text-4xl sm:text-5xl text-champagne-600 block mt-1">Lubbock Masterpiece</span>
+                            </h2>
+
+                            <div class="p-8 rounded-3xl bg-blush-100/60 border border-blush-200 shadow-sm space-y-4">
+                                <p class="font-serif italic text-base sm:text-lg text-charcoal/90 leading-relaxed">
+                                    "Your wedding isn't just an event; it is the beginning of your greatest adventure together. From the very first flower petal to the final sparkler send-off, we pour our hearts into crafting a day as effortless as it is unforgettable."
+                                </p>
+                                <div class="pt-2 border-t border-champagne-200/60 flex items-center justify-between">
+                                    <span class="font-script text-2xl text-champagne-600">With love, Jana & Nancy</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-charcoal/60">SophistOccasions</span>
+                                </div>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed">
+                                Our signature dual-coordinator team ensures every candle is lit, every vendor is on time, and every moment feels like a dream.
+                            </p>
+
+                            <div class="pt-2">
+                                <button onclick="navigateTo('gallery')" class="inline-flex items-center space-x-3 text-xs font-bold uppercase tracking-widest text-champagne-600 hover:text-champagne-700">
+                                    <span>Explore Full Portfolio</span>
+                                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Slow Motion Auto-Fading Image Carousel -->
+                        <div class="lg:col-span-7">
+                            <div class="relative h-[450px] sm:h-[520px] rounded-3xl overflow-hidden shadow-2xl border-4 border-cream">
+                                
+                                <!-- Carousel Slide 1 -->
+                                <div class="carousel-slide active-slide">
+                                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200" alt="Ceremony Arch" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-6 left-6 text-white font-serif text-lg">Romantic Lubbock Outdoor Ceremony</div>
+                                </div>
+
+                                <!-- Carousel Slide 2 -->
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=1200" alt="Luxury Tablescape" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-6 left-6 text-white font-serif text-lg">Gold & Champagne Tablescape Styling</div>
+                                </div>
+
+                                <!-- Carousel Slide 3 -->
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=1200" alt="Floral Arch" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-6 left-6 text-white font-serif text-lg">Custom Blush Floral Installation</div>
+                                </div>
+
+                                <!-- Carousel Slide 4 -->
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1200" alt="Sunset Couple" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-6 left-6 text-white font-serif text-lg">West Texas Sunset First Look</div>
+                                </div>
+
+                                <!-- Carousel Indicators -->
+                                <div class="absolute top-6 right-6 z-20 flex space-x-2" id="carouselDots">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-white opacity-100 transition-opacity"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-white opacity-40 transition-opacity"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-white opacity-40 transition-opacity"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-white opacity-40 transition-opacity"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TESTIMONIALS SECTION -->
+            <div class="py-20 bg-blush-50 border-t border-b border-champagne-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                        <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Client Reviews</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-charcoal">Love Notes From Couples</h2>
+                        <p class="text-xs sm:text-sm text-charcoal/70">Read what brides and families in Lubbock have to say about Jana & Nancy.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-3xl border border-champagne-200/80 shadow-soft-gold flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs sm:text-sm italic text-charcoal/80 leading-relaxed mb-6">
+                                    "Jana and Nancy are absolute angels! Having TWO coordinators on our wedding day was the best decision we made. Everything ran exactly on schedule."
+                                </p>
+                            </div>
+                            <div class="pt-4 border-t border-champagne-100">
+                                <h4 class="font-serif text-sm font-bold text-charcoal">Fernanda L.</h4>
+                                <span class="text-[10px] text-charcoal/60 uppercase">Lubbock, TX</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl border border-champagne-200/80 shadow-soft-gold flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs sm:text-sm italic text-charcoal/80 leading-relaxed mb-6">
+                                    "SophistOccasions took every bit of stress away. Their decade-plus of experience in Lubbock really showed when coordinating our vendors."
+                                </p>
+                            </div>
+                            <div class="pt-4 border-t border-champagne-100">
+                                <h4 class="font-serif text-sm font-bold text-charcoal">Katelyn M.</h4>
+                                <span class="text-[10px] text-charcoal/60 uppercase">West Texas Bride</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl border border-champagne-200/80 shadow-soft-gold flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs sm:text-sm italic text-charcoal/80 leading-relaxed mb-6">
+                                    "From rehearsal through our final exit, Jana & Nancy were right there making sure every detail was perfect. Our guests are still talking about how beautiful everything was!"
+                                </p>
+                            </div>
+                            <div class="pt-4 border-t border-champagne-100">
+                                <h4 class="font-serif text-sm font-bold text-charcoal">Sarah & Ryan</h4>
+                                <span class="text-[10px] text-charcoal/60 uppercase">Lubbock, TX</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-12">
+                        <button onclick="navigateTo('testimonials')" class="px-6 py-3 bg-white border border-champagne-300 rounded-full text-xs font-semibold uppercase tracking-wider text-charcoal hover:bg-champagne-50">
+                            View All Client Reviews & Write a Review
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 5. CONTACT & CONSULTATION BOOKING SECTION -->
+            <div class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+                        
+                        <!-- Contact Info Column -->
+                        <div class="lg:col-span-5 space-y-8">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Get In Touch</span>
+                                <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-charcoal mt-1">Book Your Consultation</h2>
+                                <p class="text-xs sm:text-sm text-charcoal/70 mt-3">
+                                    Connect directly with Jana Gardner & Nancy Leal to discuss your date, vision, and planning requirements in Lubbock, TX.
+                                </p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- Direct Phone -->
+                                <a href="tel:8067811778" class="flex items-center space-x-4 p-4 rounded-2xl bg-cream border border-champagne-200 hover:border-champagne-500 transition-colors">
+                                    <div class="w-10 h-10 rounded-xl bg-champagne-500 text-white flex items-center justify-center">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] uppercase font-bold text-charcoal/60">Phone / Text</span>
+                                        <h4 class="font-serif text-base font-bold text-charcoal">806-781-1778</h4>
+                                    </div>
+                                </a>
+
+                                <!-- Direct Email -->
+                                <a href="mailto:sophistoccasionslbk@yahoo.com" class="flex items-center space-x-4 p-4 rounded-2xl bg-cream border border-champagne-200 hover:border-champagne-500 transition-colors">
+                                    <div class="w-10 h-10 rounded-xl bg-champagne-500 text-white flex items-center justify-center">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] uppercase font-bold text-charcoal/60">Email</span>
+                                        <h4 class="font-serif text-xs font-bold text-charcoal">sophistoccasionslbk@yahoo.com</h4>
+                                    </div>
+                                </a>
+
+                                <!-- Address -->
+                                <div class="flex items-center space-x-4 p-4 rounded-2xl bg-cream border border-champagne-200">
+                                    <div class="w-10 h-10 rounded-xl bg-champagne-500 text-white flex items-center justify-center">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] uppercase font-bold text-charcoal/60">Location</span>
+                                        <h4 class="font-serif text-xs font-bold text-charcoal">Lubbock, Texas 79424</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Links -->
+                            <div class="pt-4 border-t border-champagne-100">
+                                <span class="block text-xs font-bold uppercase tracking-widest text-charcoal/70 mb-3">Connect On Social Media</span>
+                                <div class="flex space-x-3">
+                                    <a href="https://www.facebook.com/SophistOccasions/" target="_blank" rel="noopener" class="flex items-center space-x-2 px-4 py-2 rounded-full bg-blush-100 text-charcoal text-xs font-semibold hover:bg-champagne-500 hover:text-white transition-all">
+                                        <i class="fa-brands fa-facebook-f"></i>
+                                        <span>Facebook</span>
+                                    </a>
+                                    <a href="https://www.instagram.com/sophistoccasions/" target="_blank" rel="noopener" class="flex items-center space-x-2 px-4 py-2 rounded-full bg-blush-100 text-charcoal text-xs font-semibold hover:bg-champagne-500 hover:text-white transition-all">
+                                        <i class="fa-brands fa-instagram"></i>
+                                        <span>Instagram</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booking Form -->
+                        <div class="lg:col-span-7">
+                            <div class="bg-cream p-8 rounded-3xl border border-champagne-200 shadow-soft-gold">
+                                <h3 class="font-serif text-2xl font-bold text-charcoal mb-2">Request Consultation</h3>
+                                <p class="text-xs text-charcoal/70 mb-6">We will review your date and respond within 24 hours.</p>
+
+                                <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Your Name *</label>
+                                            <input type="text" required placeholder="Full Name" class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Partner's Name</label>
+                                            <input type="text" placeholder="Fiancé Name" class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Email *</label>
+                                            <input type="email" required placeholder="email@example.com" class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Phone *</label>
+                                            <input type="tel" required placeholder="(806) 000-0000" class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Interested Package</label>
+                                        <select class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs">
+                                            <option>Day-Of & Rehearsal Coordination</option>
+                                            <option>Full-Service Design & Planning</option>
+                                            <option>Special Event / Anniversary</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Event Vision & Notes</label>
+                                        <textarea rows="4" placeholder="Tell us about your wedding date, venue thoughts, or questions..." class="w-full px-4 py-3 rounded-xl bg-white border border-champagne-200 text-xs"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="w-full py-4 bg-champagne-500 hover:bg-champagne-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest shadow-soft-gold">
+                                        Submit Request
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= PAGE 2: DEDICATED ABOUT PAGE ================= -->
+        <section id="page-about" class="page-section hidden py-16 sm:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Our Story & Mission</span>
+                    <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-charcoal">About Jana & Nancy</h1>
+                    <p class="text-xs sm:text-sm text-charcoal/70">Co-Owners & Lead Wedding Planners in Lubbock, Texas</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+                    <div class="lg:col-span-6">
+                        <div class="zoom-img-container rounded-3xl overflow-hidden shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" alt="Jana Gardner & Nancy Leal" class="w-full h-[450px] object-cover">
+                        </div>
+                    </div>
+                    <div class="lg:col-span-6 space-y-6">
+                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-charcoal">Over 13 Years of West Texas Event Excellence</h2>
+                        <p class="text-xs sm:text-sm text-charcoal/80 leading-relaxed">
+                            Founded by <strong>Jana Gardner</strong> and <strong>Nancy Leal</strong>, SophistOccasions was born from a desire to give West Texas couples an elevated, calm, and exquisitely detailed wedding planning experience. 
+                        </p>
+                        <p class="text-xs sm:text-sm text-charcoal/80 leading-relaxed">
+                            We understand the unique charm, vendor network, and seasonal dynamics of weddings in Lubbock (ZIP 79424) and surrounding communities. From rustic vineyard venues to opulent ballroom galas, our team transforms your vision into an effortless celebration.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 rounded-2xl bg-cream border border-champagne-200">
+                                <i class="fa-solid fa-users text-champagne-500 mb-2"></i>
+                                <h4 class="font-serif text-sm font-bold text-charcoal">Dual Coordinators</h4>
+                                <p class="text-[11px] text-charcoal/70 mt-1">Both Jana & Nancy are present at your wedding to ensure flawless execution.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-cream border border-champagne-200">
+                                <i class="fa-solid fa-heart text-champagne-500 mb-2"></i>
+                                <h4 class="font-serif text-sm font-bold text-charcoal">Personalized Touch</h4>
+                                <p class="text-[11px] text-charcoal/70 mt-1">Tailored timelines, styling blueprints, and budget guidance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: DEDICATED SERVICES PAGE ================= -->
+        <section id="page-services" class="page-section hidden py-16 sm:py-24 bg-cream">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Tailored Planning Packages</span>
+                    <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-charcoal">Our Services & Pricing Tiers</h1>
+                    <p class="text-xs sm:text-sm text-charcoal/70">Flexible offerings tailored to your level of needed coordination in Lubbock & West Texas.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <div class="bg-white p-8 rounded-3xl border border-champagne-200 shadow-soft-gold flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-blush-100 flex items-center justify-center text-champagne-600 mb-6">
+                                <i class="fa-solid fa-calendar-check text-xl"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-charcoal mb-2">Day-Of & Rehearsal Coordination</h3>
+                            <p class="text-xs text-charcoal/70 leading-relaxed mb-6">Designed for couples who have planned their wedding but need professional 2-coordinator management on the big day.</p>
+                            <ul class="space-y-3 text-xs text-charcoal/80 mb-8 border-t border-champagne-100 pt-6">
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>2 Lead Coordinators (Jana & Nancy)</span></li>
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Ceremony Rehearsal Direction</span></li>
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Master Timeline & Vendor Management</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="navigateTo('contact')" class="w-full py-3 bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl">
+                            Inquire Day-Of Package
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl border-2 border-champagne-500 shadow-2xl flex flex-col justify-between relative">
+                        <div class="absolute -top-3.5 right-6 bg-champagne-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Most Popular</div>
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-champagne-500 flex items-center justify-center text-white mb-6">
+                                <i class="fa-solid fa-crown text-xl"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-charcoal mb-2">Full-Service Design & Planning</h3>
+                            <p class="text-xs text-charcoal/70 leading-relaxed mb-6">Comprehensive planning from engagement to grand exit. We curate vendors, manage budgets, and style your entire venue.</p>
+                            <ul class="space-y-3 text-xs text-charcoal/80 mb-8 border-t border-champagne-100 pt-6">
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Complete Budget & Timeline Creation</span></li>
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Vendor Recommendations & Contract Review</span></li>
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Theme, Tablescape & Floral Design</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="navigateTo('contact')" class="w-full py-3 bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-soft-gold">
+                            Inquire Full Planning
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl border border-champagne-200 shadow-soft-gold flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-blush-100 flex items-center justify-center text-champagne-600 mb-6">
+                                <i class="fa-solid fa-glass-cheers text-xl"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-charcoal mb-2">Special Events & Rehearsals</h3>
+                            <p class="text-xs text-charcoal/70 leading-relaxed mb-6">For anniversary parties, rehearsal dinners, bridal showers, and milestone galas across West Texas.</p>
+                            <ul class="space-y-3 text-xs text-charcoal/80 mb-8 border-t border-champagne-100 pt-6">
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Custom Theme & Decor Setup</span></li>
+                                <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-champagne-500"></i><span>Venue Sourcing & Catering Coordination</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="navigateTo('contact')" class="w-full py-3 bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl">
+                            Inquire Special Event
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: DEDICATED GALLERY / PORTFOLIO PAGE ================= -->
+        <section id="page-gallery" class="page-section hidden py-16 sm:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">SophistOccasions Portfolio</span>
+                    <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-charcoal">Weddings & Decor Gallery</h1>
+                    <p class="text-xs sm:text-sm text-charcoal/70">Browse our real West Texas wedding setups and design details.</p>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex flex-wrap justify-center gap-2 mb-12" id="galleryFilters">
+                    <button onclick="filterGallery('all')" class="gallery-btn active px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-champagne-500 text-white shadow-soft-gold" data-filter="all">All Photos</button>
+                    <button onclick="filterGallery('ceremony')" class="gallery-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-cream text-charcoal hover:bg-blush-100 border border-champagne-200" data-filter="ceremony">Ceremony</button>
+                    <button onclick="filterGallery('reception')" class="gallery-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-cream text-charcoal hover:bg-blush-100 border border-champagne-200" data-filter="reception">Reception</button>
+                    <button onclick="filterGallery('tablescapes')" class="gallery-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-cream text-charcoal hover:bg-blush-100 border border-champagne-200" data-filter="tablescapes">Tablescapes</button>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="galleryGrid">
+                    
+                    <div class="gallery-item ceremony zoom-img-container rounded-2xl overflow-hidden shadow-md relative group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1600', 'Romantic Lubbock Outdoor Ceremony')">
+                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="Ceremony" class="w-full h-80 object-cover">
+                        <div class="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6 text-white">
+                            <span class="text-[10px] uppercase text-champagne-300">Ceremony</span>
+                            <h4 class="font-serif text-base font-semibold">Romantic Lubbock Outdoor Ceremony</h4>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item tablescapes zoom-img-container rounded-2xl overflow-hidden shadow-md relative group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=1600', 'Gold & Champagne Table Setup')">
+                        <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=800" alt="Tablescape" class="w-full h-80 object-cover">
+                        <div class="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6 text-white">
+                            <span class="text-[10px] uppercase text-champagne-300">Tablescapes</span>
+                            <h4 class="font-serif text-base font-semibold">Gold & Champagne Table Setting</h4>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item reception zoom-img-container rounded-2xl overflow-hidden shadow-md relative group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1600', 'West Texas Sunset Reception')">
+                        <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=800" alt="Reception" class="w-full h-80 object-cover">
+                        <div class="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6 text-white">
+                            <span class="text-[10px] uppercase text-champagne-300">Reception</span>
+                            <h4 class="font-serif text-base font-semibold">West Texas Sunset First Look</h4>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Lightbox Modal -->
+        <div id="lightboxModal" class="fixed inset-0 z-50 bg-charcoal/95 hidden flex items-center justify-center p-4 backdrop-blur-md">
+            <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-champagne-500">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="max-w-4xl w-full flex flex-col items-center">
+                <img id="lightboxImg" src="" alt="View" class="max-h-[80vh] w-auto rounded-xl shadow-2xl object-contain">
+                <p id="lightboxCaption" class="text-white font-serif text-lg mt-4 text-center"></p>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 5: DEDICATED TESTIMONIALS PAGE ================= -->
+        <section id="page-testimonials" class="page-section hidden py-16 sm:py-24 bg-blush-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Client Reviews</span>
+                    <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-charcoal">Love Notes From Couples</h1>
+                    <p class="text-xs sm:text-sm text-charcoal/70">Read what brides and families in Lubbock have to say about Jana & Nancy.</p>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="openReviewModal()" class="px-6 py-3 bg-white border border-champagne-300 rounded-full text-xs font-semibold uppercase tracking-wider text-charcoal hover:bg-champagne-50">
+                        <i class="fa-solid fa-pen-to-square text-champagne-500 mr-2"></i> Write A Review
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Leave Review Modal -->
+        <div id="reviewModal" class="fixed inset-0 z-50 bg-charcoal/80 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-white max-w-lg w-full p-8 rounded-3xl border border-champagne-200 relative">
+                <button onclick="closeReviewModal()" class="absolute top-5 right-5 text-charcoal hover:text-champagne-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <h3 class="font-serif text-2xl font-bold text-charcoal mb-2">Leave Your Review</h3>
+                <p class="text-xs text-charcoal/70 mb-6">Share your wedding experience with SophistOccasions!</p>
+                <form onsubmit="handleReviewSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Your Name *</label>
+                        <input type="text" required placeholder="e.g. Jessica M." class="w-full px-4 py-2.5 rounded-xl border border-champagne-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Rating *</label>
+                        <select class="w-full px-4 py-2.5 rounded-xl border border-champagne-200 text-xs">
+                            <option>5 Stars - Flawless Experience</option>
+                            <option>4 Stars - Wonderful Service</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-charcoal mb-1">Your Review *</label>
+                        <textarea rows="4" required placeholder="Write your feedback..." class="w-full px-4 py-2.5 rounded-xl border border-champagne-200 text-xs"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl">
+                        Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 6: DEDICATED CONTACT PAGE ================= -->
+        <section id="page-contact" class="page-section hidden py-16 sm:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-xs font-bold uppercase tracking-widest text-champagne-600">Get In Touch</span>
+                    <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-charcoal">Book Your Free Consultation</h1>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 6. FOOTER -->
+    <footer class="bg-charcoal text-white pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-slate-700">
+                
+                <div class="space-y-4">
+                    <button onclick="navigateTo('home')" class="flex items-center space-x-3 text-left">
+                        <div class="w-8 h-8 rounded-full border border-champagne-500 flex items-center justify-center bg-slate-800">
+                            <span class="font-script text-lg text-champagne-500 font-bold">S</span>
+                        </div>
+                        <span class="font-serif text-xl font-semibold tracking-wider text-white">
+                            Sophist<span class="font-script text-2xl font-normal text-champagne-500">Occasions</span>
+                        </span>
+                    </button>
+                    <p class="text-xs text-slate-300 leading-relaxed max-w-sm">
+                        Lubbock's premier luxury wedding planning duo. Crafting elegant, stress-free West Texas events led by Jana Gardner & Nancy Leal.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-serif text-sm font-bold uppercase text-champagne-500">Navigation</h4>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li><button onclick="navigateTo('home')" class="hover:text-champagne-500">Home</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-champagne-500">About Jana & Nancy</button></li>
+                        <li><button onclick="navigateTo('services')" class="hover:text-champagne-500">Services</button></li>
+                        <li><button onclick="navigateTo('gallery')" class="hover:text-champagne-500">Portfolio</button></li>
+                        <li><button onclick="navigateTo('testimonials')" class="hover:text-champagne-500">Client Reviews</button></li>
+                        <li><button onclick="navigateTo('contact')" class="hover:text-champagne-500">Book Consultation</button></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-serif text-sm font-bold uppercase text-champagne-500">SophistOccasions Info</h4>
+                    <p class="text-xs text-slate-300"><i class="fa-solid fa-location-dot text-champagne-500 mr-2"></i> Lubbock, Texas 79424</p>
+                    <p class="text-xs text-slate-300"><i class="fa-solid fa-phone text-champagne-500 mr-2"></i> 806-781-1778</p>
+                    <p class="text-xs text-slate-300"><i class="fa-solid fa-envelope text-champagne-500 mr-2"></i> sophistoccasionslbk@yahoo.com</p>
+                    <div class="flex space-x-3 pt-2">
+                        <a href="https://www.facebook.com/SophistOccasions/" target="_blank" rel="noopener" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-champagne-500 flex items-center justify-center text-xs">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/sophistoccasions/" target="_blank" rel="noopener" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-champagne-500 flex items-center justify-center text-xs">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400">
+                <p>© 2026 SophistOccasions. All Rights Reserved. Lubbock, TX 79424.</p>
+                <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="mt-4 sm:mt-0 text-champagne-500 hover:text-champagne-400">
+                    Back To Top <i class="fa-solid fa-arrow-up ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Multi-Page SPA Router Navigation
+        function navigateTo(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(p => p.classList.add('hidden'));
+            pages.forEach(p => p.classList.remove('active'));
+
+            const target = document.getElementById('page-' + pageId);
+            if(target) {
+                target.classList.remove('hidden');
+                setTimeout(() => target.classList.add('active'), 10);
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('text-champagne-600', 'font-semibold');
+                link.classList.add('text-charcoal');
+            });
+
+            const activeBtn = document.getElementById('nav-' + pageId);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-charcoal');
+                activeBtn.classList.add('text-champagne-600', 'font-semibold');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile Drawer Toggle
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Slow Motion Auto-Fading Carousel Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dotsContainer = document.getElementById('carouselDots');
+
+        function startSlowMotionCarousel() {
+            if(!slides.length) return;
+            
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active-slide');
+                
+                if (dotsContainer && dotsContainer.children[currentSlide]) {
+                    dotsContainer.children[currentSlide].classList.replace('opacity-100', 'opacity-40');
+                }
+
+                currentSlide = (currentSlide + 1) % slides.length;
+
+                slides[currentSlide].classList.add('active-slide');
+                
+                if (dotsContainer && dotsContainer.children[currentSlide]) {
+                    dotsContainer.children[currentSlide].classList.replace('opacity-40', 'opacity-100');
+                }
+            }, 5500); // 5.5 Seconds Slow Motion Interval
+        }
+
+        // Gallery Filter
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const btns = document.querySelectorAll('.gallery-btn');
+
+            btns.forEach(btn => {
+                if(btn.getAttribute('data-filter') === category) {
+                    btn.className = "gallery-btn active px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-champagne-500 text-white shadow-soft-gold";
+                } else {
+                    btn.className = "gallery-btn px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-cream text-charcoal hover:bg-blush-100 border border-champagne-200";
+                }
+            });
+
+            items.forEach(item => {
+                if(category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Lightbox
+        function openLightbox(imgUrl, caption) {
+            document.getElementById('lightboxImg').src = imgUrl;
+            document.getElementById('lightboxCaption').innerText = caption;
+            document.getElementById('lightboxModal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+        }
+
+        // Review Modal
+        function openReviewModal() {
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+        }
+
+        // Toast Helper
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = "bg-charcoal text-white px-5 py-3 rounded-2xl shadow-xl border border-champagne-500 text-xs font-medium flex items-center space-x-2 pointer-events-auto transition-all";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-champagne-500 text-sm"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast("Thank you! Jana & Nancy will contact you within 24 hours.");
+            e.target.reset();
+        }
+
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            closeReviewModal();
+            showToast("Thank you for your feedback! Your review has been submitted.");
+            e.target.reset();
+        }
+
+        // Initialize Carousel & Nav on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            navigateTo('home');
+            startSlowMotionCarousel();
+        });
+    </script>
+</body>
+</html>
